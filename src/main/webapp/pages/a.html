@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">档案管理 > 登记</h2>
+    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="一级机构" prop="levelFirst">
+                    <el-select v-model="form.levelFirst" style="width: 200px" @change="changeLevelFirst">
+                        <el-option
+                                v-for="item in dataList"
+                                :key="item.id"
+                                :label="item.levelFirst"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="二级机构" prop="levelSecond">
+                    <el-select v-model="form.levelSecond" style="width: 200px" @change="changeLevelSecond">
+                        <el-option
+                                v-for="item in dataListFirst"
+                                :key="item.id"
+                                :label="item.levelSecond"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="三级机构" prop="levelThird">
+                    <el-select v-model="form.levelThird" style="width: 200px">
+                        <el-option
+                                v-for="item in dataListSecond"
+                                :key="item.id"
+                                :label="item.levelThird"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="职位分类" prop="zwfl">
+                    <el-select v-model="form.zwfl" style="width: 200px" >
+                        <el-option
+                                v-for="item in dataList"
+                                :key="item.id"
+                                :label="item.levelFirst"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+                <el-form-item label="职位名称" prop="zwmc">
+                    <el-select v-model="form.zwmc" style="width: 200px">
+                        <el-option
+                                v-for="item in dataList"
+                                :key="item.id"
+                                :label="item.levelThird"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="form.email" style="width: 200px" @input="handlerChange"></el-input>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="form.phone" style="width: 200px"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="薪酬标准" prop="xcbz">
+                    <el-select v-model="form.xcbz" style="width: 200px">
+                        <el-option
+                                v-for="item in dataList"
+                                :key="item.id"
+                                :label="item.levelThird"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="建档时间" prop="time">
+                    <el-input placeholder="请输入内容" v-model="form.time" :disabled="true" style="width: 200px"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="登记人" prop="">
+
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+<!--        <el-row>-->
+<!--            <el-col :span="">-->
+<!--                <el-form-item label="Email" prop="email">-->
+
+<!--                </el-form-item>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
+
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+            <el-button @click="goBack">取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    // var show= function(){
+    //     var date = new Date();
+    //     var year = date.getFullYear();
+    //     var month = date.getMonth()+1;
+    //     month= month<10?"0"+month:month;
+    //     var day = date.getDate();//获取日期
+    //     day= day<10?"0"+day:day;
+    //     var hour = date.getHours();
+    //     hour= hour<10?"0"+hour:hour;
+    //     var minute = date.getMinutes();
+    //     minute= minute<10?"0"+minute:minute;
+    //     var week = date.getDay();//获取星期
+    //     var second=date.getSeconds();
+    //     second= second<10?"0"+second:second;
+    //     week = "日一二三四五六".charAt(week);
+    //     week="星期"+week;
+    //     result=year+"-"+month+"-"+day+" "+week+" "+hour+":"+minute+":"+second;
+    //     document.getElementById("time").innerHTML=result;
+    // }
+    // show();
+    // setInterval("show()",1000);
+
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            form:{
+                time:'',
+                email:'',
+                levelFirst:'',
+                levelSecond:'',
+                levelThird:'',
+            },
+            dataList: [],
+            dataListFirst:[],
+            dataListSecond:[],
+
+        },
+        created(){
+            this.getAll();
+            // setInterval(this.getTime(),1000);
+            this.getTime();
+        },
+        methods:{
+            getAll(){
+                axios.get("../mechanisms").then((res)=>{
+                    this.dataList = res.data.data;
+                })
+            },
+            getTime(){
+                var date = new Date();
+                this.form.time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+            },
+            handlerChange(e){
+                console.log(e);
+
+            },
+            changeLevelFirst(e){
+                this.form.levelSecond = '';
+                this.form.levelThird = '';
+                console.log(e,this.form.levelFirst);
+                axios.get("../mechanisms/"+e).then((res)=>{
+                    this.dataListFirst = res.data.data;
+                    alert(e);
+                })
+            },
+            changeLevelSecond(e){
+                this.form.levelThird = '';
+                alert(this.form.levelFirst)
+                axios.get("../mechanisms/"+this.form.levelFirst+"/"+e).then((res)=>{
+                    this.dataListSecond = res.data.data;
+                    alert(res.data.data);
+                })
+            }
+        },
+        // watch:{
+        //     form:{
+        //         email: {
+        //             handler(newValue,oldValue){
+        //                 console.log("修改了",newValue,oldValue);
+        //                 alert("ssss")
+        //             }
+        //         }
+        //     }
+        // }
+    })
+
+</script>
+
+<!--<style>-->
+<!--    .handle-title{-->
+<!--        line-height: 50px;-->
+<!--    }-->
+<!--    .el-textarea__inner{-->
+<!--        height: 100px;-->
+<!--    }-->
+<!--</style>-->
+
+</html>
