@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+
+<div id="app">
+
+    <h2 class="handle-title">档案管理 > 恢复</h2>
+<!--    <div class="content-header">-->
+<!--        <h1>图书管理</h1>-->
+<!--    </div>-->
+    <div class="app-container">
+        <div class="box">
+<!--            <div class="filter-container">-->
+<!--                <el-input placeholder="图书名称" style="width: 200px;" class="filter-item"></el-input>-->
+<!--                <el-button class="dalfBut">查询</el-button>-->
+<!--                <el-button type="primary" class="butT" @click="openSave()">新建</el-button>-->
+<!--            </div>-->
+
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="fileNo" label="档案编号" align="center"></el-table-column>
+                <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="levelFirstName" label="一级机构" align="center"></el-table-column>
+                <el-table-column prop="levelSecondName" label="二级机构" align="center"></el-table-column>
+                <el-table-column prop="levelThirdName" label="三级机构" align="center"></el-table-column>
+                <el-table-column prop="zwmcName" label="职位名称" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)" >查看</el-button>
+                        <el-button size="mini" type="success" @click="handleDelete(scope.row)">恢复</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+<!--             新增标签弹层-->
+            <div class="add-form">
+                <el-dialog title="复核" :visible.sync="dialogFormVisible" width="80%">
+                    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="档案编号" prop="fileNo">
+                                    <el-input placeholder="请输入内容" v-model="form.fileNo" :disabled="true" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="一级机构" prop="levelFirstName">
+                                    <el-input placeholder="请输入内容" v-model="form.levelFirstName" :disabled="true" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="二级机构" prop="levelSecondName">
+                                    <el-input placeholder="请输入内容" v-model="form.levelSecondName" :disabled="true" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="三级机构" prop="levelThirdName">
+                                    <el-input placeholder="请输入内容" v-model="form.levelThirdName" :disabled="true" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="职位分类" prop="zwflName">
+                                    <el-input placeholder="请输入内容" v-model="form.zwflName" :disabled="true" style="width: 200px"></el-input>
+
+                                </el-form-item>
+                            </el-col>
+
+                            <el-col :span="8">
+                                <el-form-item label="职位名称" prop="zwmcName">
+                                    <el-input placeholder="请输入内容" v-model="form.zwmcName" :disabled="true" style="width: 200px"></el-input>
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="姓名" prop="name">
+                                    <el-input v-model="form.name" style="width: 200px" @input="handlerChange"></el-input>
+                                </el-form-item>
+                            </el-col>
+
+                            <el-col :span="8">
+                                <el-form-item label="性别" prop="sex">
+                                    <el-select v-model="form.sex" style="width: 200px">
+                                        <el-option :key="" label="男" value="男"></el-option>
+                                        <el-option :key="" label="女" value="女"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="Email" prop="email">
+                                    <el-input v-model="form.email" style="width: 200px" @input="handlerChange"></el-input>
+                                </el-form-item>
+                            </el-col>
+
+                            <el-col :span="8">
+                                <el-form-item label="电话" prop="phone">
+                                    <el-input placeholder="请输入内容" v-model="form.phone" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="薪酬标准" prop="xcbz">
+                                    <el-select v-model="form.xcbz" style="width: 200px">
+                                        <el-option
+                                                v-for="item in dataListXCBZ"
+                                                :key="item.standardId"
+                                                :label="item.standardName"
+                                                :value="item.standardId">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="复核时间" prop="time">
+                                    <el-input placeholder="请输入内容" v-model="form.time" :disabled="true" style="width: 200px"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="复核人" prop="">
+
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">关闭</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data:{
+            form:{
+                fileNo:'',
+                name:'',
+                phone:'',
+                sex:'',
+                levelFirstName:'',
+                levelSecondName:'',
+                levelThirdName:'',
+                zwflName:'',
+                zwmcName:'',
+                xcbz:'',
+            },
+            dataList:[],
+            dataListXCBZ:[],
+            dialogFormVisible:false,
+        },
+        created(){
+            this.getAll();
+            this.getTime();
+        },
+
+
+
+        methods:{
+            getAll(){
+                axios.get("../files/some/2").then((res)=>{
+                    this.dataList = res.data.data;
+                });
+                axios.get("../salaryStandards").then((res)=>{
+                    this.dataListXCBZ = res.data.data;
+                });
+            },
+            getTime(){
+                var date = new Date();
+                this.form.time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            },
+            handleUpdate(row){
+                axios.get("../files/"+row.id).then((res)=>{
+                    if (res.data.code === 20041){
+                        this.form.fileNo = res.data.data.fileNo;
+                        this.form.name = res.data.data.name;
+                        this.form.phone = res.data.data.phone;
+                        this.form.email = res.data.data.email;
+                        this.form.sex = res.data.data.sex;
+                        this.form.levelFirstName = res.data.data.levelFirstName;
+                        this.form.levelSecondName = res.data.data.levelSecondName;
+                        this.form.levelThirdName = res.data.data.levelThirdName;
+                        this.form.zwflName = res.data.data.zwflName;
+                        this.form.zwmcName = res.data.data.zwmcName;
+                        this.form.xcbz = res.data.data.xcbz;
+                        this.dialogFormVisible = true;
+                    }else {}
+                }).finally(()=>{
+                    this.getAll()
+                });
+            },
+            handleDelete(row){
+
+                this.$confirm("确认恢复？","提示",{
+                    type:"info"
+                }).then(()=>{
+                    axios.put("../files/"+row.fileNo+"/1").then((res)=>{
+                    }).finally(()=>{
+                        this.getAll()
+                    });
+                }).catch(()=>{
+                    this.$message.info("取消恢复");
+                });
+            }
+        }
+    })
+</script>
+
+</html>

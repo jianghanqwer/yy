@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="app">
+    <h2 class="handle-title">薪酬管理 > 已经复核</h2>
+    <el-table size="small" current-row-key="id" :data="dataList" border="true" stripe highlight-current-row>
+        <el-table-column type="index" align="center" label="序号"></el-table-column>
+        <el-table-column prop="standardId" label="薪酬标准编号" align="center"></el-table-column>
+        <el-table-column prop="standardName" label="薪酬标准名称" align="center"></el-table-column>
+        <el-table-column prop="total" label="薪酬总额" align="center"></el-table-column>
+        <el-table-column prop="maker" label="制订人" align="center"></el-table-column>
+        <el-table-column prop="opinion" label="复核意见" align="center"></el-table-column>
+    </el-table>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            dataList:[],
+        },
+        created(){
+            this.getAll();
+        },
+        methods:{
+            getAll(){
+                axios.get("../salaryStandards/some/2").then((res)=>{
+                    this.dataList = res.data.data;
+                });
+            },
+        },
+    })
+</script>
+</html>

@@ -49,4 +49,22 @@ public class MechanismServiceImpl implements MechanismService {
     public List<Mechanism> getLevelThird(String levelFirst,String levelSecond) {
         return mechanismDao.getLevelThird(levelFirst,levelSecond);
     }
+
+    @Override
+    public boolean saveLevelFirst(Mechanism mechanism) {
+        mechanismDao.saveLevelFirst(mechanism);
+        return true;
+    }
+
+    @Override
+    public boolean saveLevelSecond(Mechanism mechanism) {
+        mechanismDao.saveLevelSecond(mechanism);
+        return true;
+    }
+
+    @Override
+    public boolean saveLevelThird(Mechanism mechanism) {
+        mechanismDao.saveLevelThird(mechanism);
+        return true;
+    }
 }

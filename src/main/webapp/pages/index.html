@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">人力资源管理 > 首页</h2>
+    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+        <a href="xzjg.html" style="text-decoration: none">| 新增机构 |</a>
+        <a href="dadj.html" style="text-decoration: none">| 档案登记 |</a>
+        <a href="dafh.html" style="text-decoration: none">| 档案复核 |</a>
+        <a href="dayfh.html" style="text-decoration: none">| 档案已复核 |</a>
+        <a href="daysc.html" style="text-decoration: none">| 档案已删除 |</a>
+        <br>
+        <br>
+        <a href="xzscbz.html" style="text-decoration: none">| 薪酬标准设置 |</a>
+        <a href="xcbzdj.html" style="text-decoration: none">| 薪酬标准登记 |</a>
+        <a href="xcbzfh.html" style="text-decoration: none">| 薪酬标准复核 |</a>
+        <a href="xcbzyfh.html" style="text-decoration: none">| 薪酬标准已复核 |</a>
+        <br>
+        <br>
+        <a href="xcffdj.html" style="text-decoration: none">| 薪酬发放登记 |</a>
+    </el-form>
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+    })
+
+</script>
+
+</html>

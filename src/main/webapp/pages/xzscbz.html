@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">档案管理 > 新增薪酬标准</h2>
+    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+        <el-form ref="dataAddForm" :model="formData1" :rules="rules" label-position="right" label-width="100px">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="新增标准" prop="levelFirst">
+                        <el-input v-model="formData1.levelFirst" style="width: 200px"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+
+        <template>
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <div style="margin: 15px 0;"></div>
+            <el-checkbox-group v-model="dataList" @change="handleCheckedCitiesChange">
+                <el-checkbox v-for="item in dataList" :label="item.itemName" :key="item.itemName">{{item.itemName}}</el-checkbox>
+            </el-checkbox-group>
+        </template>
+    </el-form>
+
+    <div class="add-form">
+        <el-dialog title="新增一级机构" :visible.sync="dialogFormVisible1">
+            <el-form ref="dataAddForm" :model="formData1" :rules="rules" label-position="right" label-width="100px">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="新增一级" prop="levelFirst">
+                            <el-input v-model="formData1.levelFirst" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible1 = false">取消</el-button>
+                <el-button type="primary" @click="saveLevelFirst()">确定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            form:{},
+            formData1:{
+                levelFirst:''
+            },
+            formData2:{},
+            formData3:{},
+            dialogFormVisible1:false,
+            dialogFormVisible2:false,
+            dialogFormVisible3:false,
+            dataListFirst:[],
+            dataList:[],
+
+        },
+        created(){
+            this.getAll();
+        },
+        methods:{
+            getAll(){
+                axios.get("../salaryItems").then((res)=>{
+                    this.dataList = res.data.data;
+                })
+            },
+        },
+
+    })
+
+</script>
+
+<!--<style>-->
+<!--    .handle-title{-->
+<!--        line-height: 50px;-->
+<!--    }-->
+<!--    .el-textarea__inner{-->
+<!--        height: 100px;-->
+<!--    }-->
+<!--</style>-->
+
+</html>

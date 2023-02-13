@@ -50,4 +50,29 @@ public interface MechanismService {
      */
     public List<Mechanism> getLevelThird(String levelFirst, String levelSecond);
 
+
+    /**
+     *
+     * @param mechanism
+     * @return
+     */
+    public boolean saveLevelFirst(Mechanism mechanism);
+
+    /**
+     *
+     * @param mechanism
+     * @return
+     */
+    public boolean saveLevelSecond(Mechanism mechanism);
+
+
+    /**
+     *
+     * @param mechanism
+     * @return
+     */
+    public boolean saveLevelThird(Mechanism mechanism);
+
+
+
 }

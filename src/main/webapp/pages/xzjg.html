@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">档案管理 > 新增机构</h2>
+    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+        <el-button type="primary" class="butT" @click="openLevelFirst()">新建一级</el-button>
+        <el-button type="primary" class="butT" @click="openLevelSecond()">新建二级</el-button>
+        <el-button type="primary" class="butT" @click="openLevelThird()">新建三级</el-button>
+    </el-form>
+
+    <div class="add-form">
+        <el-dialog title="新增一级机构" :visible.sync="dialogFormVisible1">
+            <el-form ref="dataAddForm" :model="formData1" :rules="rules" label-position="right" label-width="100px">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="新增一级" prop="levelFirst">
+                            <el-input v-model="formData1.levelFirst" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible1 = false">取消</el-button>
+                <el-button type="primary" @click="saveLevelFirst()">确定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+    <div class="add-form">
+        <el-dialog title="新增二级机构" :visible.sync="dialogFormVisible2">
+            <el-form ref="dataAddForm" :model="formData2" :rules="rules" label-position="right" label-width="100px">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="新增二级" prop="levelSecond">
+                            <el-input v-model="formData2.levelSecond" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="一级机构" prop="id">
+                            <el-select v-model="formData2.id" style="width: 200px">
+                                <el-option
+                                        v-for="item in dataList"
+                                        :key="item.id"
+                                        :label="item.levelFirst"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible2 = false">取消</el-button>
+                <el-button type="primary" @click="saveLevelSecond()">确定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+
+    <div class="add-form">
+        <el-dialog title="新增三级机构" :visible.sync="dialogFormVisible3">
+            <el-form ref="dataAddForm" :model="formData3" :rules="rules" label-position="right" label-width="100px">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="新增三级" prop="levelThird">
+                            <el-input v-model="formData3.levelThird" style="width: 200px"></el-input>
+                        </el-form-item>
+
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="一级机构" prop="levelFirst">
+                            <el-select v-model="formData3.levelFirst" style="width: 200px" @change="changeLevelFirst">
+                                <el-option
+                                        v-for="item in dataList"
+                                        :key="item.id"
+                                        :label="item.levelFirst"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="二级机构" prop="id">
+                            <el-select v-model="formData3.id" style="width: 200px" >
+                                <el-option
+                                        v-for="item in dataListFirst"
+                                        :key="item.id"
+                                        :label="item.levelSecond"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible3 = false">取消</el-button>
+                <el-button type="primary" @click="savaLevelThird()">确定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            form:{},
+            formData1:{
+                levelFirst:''
+            },
+            formData2:{},
+            formData3:{},
+            dialogFormVisible1:false,
+            dialogFormVisible2:false,
+            dialogFormVisible3:false,
+            dataListFirst:[],
+            dataList:[],
+
+        },
+        created(){
+            this.getAll();
+        },
+        methods:{
+            saveLevelFirst(){
+                axios.post("../mechanisms",this.formData1).then((res)=>{
+                    if(res.data.code == 20011){
+                        this.dialogFormVisible=false;
+                        this.$message.success("添加成功");
+                    }else if (res.data.code == 20010){
+                        this.$message.success("添加失败");
+                    }else{
+
+                    }
+                })
+            },
+            saveLevelSecond(){
+              axios.post("../mechanisms/second",this.formData2).then((res)=>{
+                  if(res.data.code == 20011){
+                      this.dialogFormVisible=false;
+                      this.$message.success("添加成功");
+                  }else if (res.data.code == 20010){
+                      this.$message.success("添加失败");
+                  }else{
+
+                  }
+              })
+            },
+            savaLevelThird(){
+                axios.post("../mechanisms/third",this.formData3).then((res)=>{
+                    if(res.data.code == 20011){
+                        this.dialogFormVisible=false;
+                        this.$message.success("添加成功");
+                    }else if (res.data.code == 20010){
+                        this.$message.success("添加失败");
+                    }else{
+
+                    }
+                })
+            },
+            openLevelFirst(){
+                this.dialogFormVisible1 = true;
+                this.formData1 = {};
+            },
+            openLevelSecond(){
+                this.dialogFormVisible2 = true;
+                this.formData2 = {};
+            },
+            openLevelThird(){
+                this.dialogFormVisible3 = true;
+                this.formData3 = {};
+            },
+            changeLevelFirst(e){
+                // this.formData3.id = '';
+                axios.get("../mechanisms/"+e).then((res)=>{
+                    this.dataListFirst = res.data.data;
+
+                })
+            },
+            getAll(){
+                axios.get("../mechanisms").then((res)=>{
+                    this.dataList = res.data.data;
+                })
+            },
+        },
+
+    })
+
+</script>
+
+<!--<style>-->
+<!--    .handle-title{-->
+<!--        line-height: 50px;-->
+<!--    }-->
+<!--    .el-textarea__inner{-->
+<!--        height: 100px;-->
+<!--    }-->
+<!--</style>-->
+
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">档案管理 > 登记</h2>
+    <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="一级机构" prop="levelFirst">
+                    <el-select v-model="form.levelFirst" style="width: 200px" @change="changeLevelFirst">
+                        <el-option
+                                v-for="item in dataList"
+                                :key="item.id"
+                                :label="item.levelFirst"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="二级机构" prop="levelSecond">
+                    <el-select v-model="form.levelSecond" style="width: 200px" @change="changeLevelSecond">
+                        <el-option
+                                v-for="item in dataListFirst"
+                                :key="item.id"
+                                :label="item.levelSecond"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="三级机构" prop="levelThird">
+                    <el-select v-model="form.levelThird" style="width: 200px" @change="changeLevelThird">
+                        <el-option
+                                v-for="item in dataListSecond"
+                                :key="item.id"
+                                :label="item.levelThird"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="职位分类" prop="zwfl">
+                    <el-select v-model="form.zwfl" style="width: 200px" @change="changeZWFL">
+                        <el-option
+                                v-for="item in dataListZWFL"
+                                :key="item.id"
+                                :label="item.classification"
+                                :value="item.id" >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+                <el-form-item label="职位名称" prop="zwmc">
+                    <el-select v-model="form.zwmc" style="width: 200px" @change="changeZWMC">
+                        <el-option
+                                v-for="item in dataListZWMC"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="form.name" style="width: 200px" @input="handlerChange"></el-input>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+                <el-form-item label="性别" prop="sex">
+                    <el-select v-model="form.sex" style="width: 200px">
+                        <el-option :key="" label="男" value="男"></el-option>
+                        <el-option :key="" label="女" value="女"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="Email" prop="email">
+                    <el-input v-model="form.email" style="width: 200px" @input="handlerChange"></el-input>
+                </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="form.phone" style="width: 200px"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="薪酬标准" prop="xcbz">
+                    <el-select v-model="form.xcbz" style="width: 200px">
+                        <el-option
+                                v-for="item in dataListXCBZ"
+                                :key="item.standardId"
+                                :label="item.standardName"
+                                :value="item.standardId">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="建档时间" prop="registrationTime">
+                    <el-input placeholder="请输入内容" v-model="form.registrationTime" :disabled="true" style="width: 200px"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="登记人" prop="registrant">
+                    <el-input placeholder="请输入内容" v-model="form.registrant" :disabled="true" style="width: 200px"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-form-item>
+<!--            <el-button type="primary" @click="onSubmit('form')">提交</el-button>-->
+            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button @click="goBack">取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            form:{
+                registrationTime:'',
+                email:'',
+                levelFirst:'',
+                levelSecond:'',
+                levelThird:'',
+                levelFirstName:'',
+                levelSecondName:'',
+                levelThirdName:'',
+                zwmc:'',
+                zwmcName:'',
+                zwfl:'',
+                zwflName:'',
+                fileNo:'',
+                registrant:'admin'
+            },
+            dataList: [],
+            dataListFirst:[],
+            dataListSecond:[],
+            dataListZWFL:[],
+            dataListZWMC:[],
+            dataListXCBZ:[],
+            levelFirstID:'00',
+            levelSecondID:'00',
+            levelThirdID:'00',
+            zwmcID:'',
+            zwflID:'',
+            fno:'',
+
+        },
+        created(){
+            this.getAll();
+            this.getTime();
+            this.getAllZW();
+        },
+        methods:{
+            getAll(){
+                axios.get("../mechanisms").then((res)=>{
+                    this.dataList = res.data.data;
+                });
+
+                axios.get("../salaryStandards").then((res)=>{
+                    this.dataListXCBZ = res.data.data;
+                });
+
+                axios.get("../files/count").then((res)=>{
+                    this.fno=res.data.data;
+                });
+            },
+            getTime(){
+                var date = new Date();
+                this.form.registrationTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            },
+            handlerChange(e){
+                console.log(e);
+
+            },
+            changeLevelFirst(e){
+
+                let obj = {};
+                obj = this.dataList.find((item) => {
+                    return  item.id === e;
+                });
+                this.form.levelFirstName = obj.levelFirst;
+
+                obj.id = obj.id.toString();
+                if (obj.id.length<2){
+                    obj.id = "0" + obj.id
+                }
+                this.levelFirstID = obj.id
+
+                this.form.levelSecond = '';
+                this.form.levelThird = '';
+                console.log(e,this.form.levelFirst);
+                axios.get("../mechanisms/"+e).then((res)=>{
+                    this.dataListFirst = res.data.data;
+                    // alert(e);
+                })
+            },
+            changeLevelSecond(e){
+
+                let obj = {};
+                obj = this.dataListFirst.find((item) => {
+                    return  item.id === e;
+                });
+                this.form.levelSecondName = obj.levelSecond;
+
+                obj.id = obj.id.toString();
+                if (obj.id.length<2){
+                    obj.id = "0" + obj.id
+                }
+                this.levelSecondID = obj.id
+
+                this.form.levelThird = '';
+                // alert(this.form.levelFirst)
+                axios.get("../mechanisms/"+this.form.levelFirst+"/"+e).then((res)=>{
+                    this.dataListSecond = res.data.data;
+                    // alert(res.data.data);
+                })
+            },
+            changeLevelThird(e){
+                let obj = {};
+                obj = this.dataListSecond.find((item) => {
+                    return  item.id === e;
+                });
+                this.form.levelThirdName = obj.levelThird;
+
+                obj.id = obj.id.toString();
+                if (obj.id.length<2){
+                    obj.id = "0" + obj.id
+                }
+                this.levelThirdID = obj.id
+            },
+            getAllZW(){
+
+                axios.get("../positions").then((res)=>{
+                    this.dataListZWFL = res.data.data;
+                })
+            },
+            changeZWFL(e){
+                let obj = {};
+                obj = this.dataListZWFL.find((item) => {
+                    return  item.id === e;
+                });
+                this.form.zwflName = obj.classification;
+
+                obj.id = obj.id.toString();
+                if (obj.id.length<2){
+                    obj.id = "0" + obj.id
+                }
+                this.zwflID = obj.id
+                axios.get("../positions/"+e).then((res)=>{
+                    this.dataListZWMC = res.data.data;
+                })
+            },
+            changeZWMC(e){
+                let obj = {};
+                obj = this.dataListZWMC.find((item) => {
+                    return  item.id === e;
+                });
+                // console.log(obj);
+                this.form.zwmcName = obj.name;
+
+                obj.id = obj.id.toString();
+                if (obj.id.length<2){
+                    obj.id = "0" + obj.id
+                }
+                this.zwmcID = obj.id
+            },
+            onSubmit(){
+                this.fno = this.fno.toString();
+                if (this.fno.length<2){
+                    this.fno = "0"+this.fno;
+                }
+                this.form.state = 0;
+                this.form.fileNo=new Date().getFullYear()+this.levelFirstID+this.levelSecondID+this.levelThirdID+this.fno;
+                axios.post("../files",this.form).then((res)=>{})
+            }
+        }
+    })
+
+</script>
+
+</html>

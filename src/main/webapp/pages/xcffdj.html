@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+    <h2 class="handle-title">薪酬发放 > 登记</h2>
+
+
+        <el-table size="small" current-row-key="id" :data="dataList" border="true" stripe highlight-current-row>
+            <el-table-column type="index" align="center" label="序号"></el-table-column>
+            <el-table-column prop="standardId" label="薪酬发放单编号" align="center"></el-table-column>
+            <el-table-column prop="standardName" label="一级机构" align="center"></el-table-column>
+            <el-table-column prop="standardName" label="二级机构" align="center"></el-table-column>
+            <el-table-column prop="standardName" label="三级机构" align="center"></el-table-column>
+            <el-table-column prop="total" label="人数" align="center"></el-table-column>
+            <el-table-column prop="maker" label="基本薪酬总额" align="center"></el-table-column>
+            <el-table-column label="登记" align="center">
+                <template slot-scope="scope">
+                    <el-button type="primary" size="mini" @click="handleUpdate(scope.row)" >登记</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+
+<!--        <el-form-item>-->
+<!--&lt;!&ndash;            <el-button type="primary" @click="onSubmit('form')">提交</el-button>&ndash;&gt;-->
+<!--            <el-button type="primary" @click="onSubmit">提交</el-button>-->
+<!--            <el-button @click="goBack">取消</el-button>-->
+<!--        </el-form-item>-->
+
+<!--    新建dialog-->
+    <div class="add-form">
+        <el-dialog title="登记" :visible.sync="dialogFormVisible" width="80%">
+            <el-form ref="form" :rules="rules" :model="form" class="demo-ruleForm" label-width="80px" >
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="标准编号" prop="standardId">
+                            <el-input v-model="form.standardId" style="width: 200px" @input="handlerChange"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="标准名称" prop="standardName">
+                            <el-select v-model="form.standardName" style="width: 200px" @change="changeLevelSecond">
+                                <el-option
+                                        v-for="item in dataListFirst"
+                                        :key="item.id"
+                                        :label="item.levelSecond"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="薪酬总额" prop="total">
+                            <el-input v-model="form.total" :disabled="true" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="制动人" prop="maker">
+                            <el-input v-model="form.maker" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="8">
+                        <el-form-item label="登记人" prop="registrant">
+                            <el-input v-model="form.registrant" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="8">
+                        <el-form-item label="登记时间" prop="registrationTime">
+                            <el-input v-model="form.registrationTime" style="width: 200px"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+            </el-form>
+
+            <el-form ref="formData" :rules="rules" :model="formDate" class="demo-ruleForm" label-width="80px" >
+                <el-table size="small" current-row-key="id" :data="tableData" border="true" stripe highlight-current-row>
+                    <el-table-column type="index" align="center" label="序号"></el-table-column>
+                    <el-table-column prop="itemName" label="薪酬项目名称" align="center"></el-table-column>
+                    <el-table-column prop="" label="金额" align="center">
+                        <template slot-scope="scope">
+                            <el-form-item style="height: 20px">
+                                <el-input v-model="scope.row.money" style="width: 200px" @input="handlerChange"></el-input>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+
+                <el-form-item>
+                    <!--            <el-button type="primary" @click="onSubmit('form')">提交</el-button>-->
+                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                    <el-button @click="goBack">取消</el-button>
+                </el-form-item>
+            </el-form>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="saveFile()">确定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</div>
+</body>
+
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+
+
+<script>
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            dialogFormVisible:false,
+            form:{
+                standardId:'',
+                total:'',
+                state:'',
+            },
+            formData:{
+                ill:[]
+            },
+            dataList:[],
+            tableData: [],
+            standardId:'',
+
+        },
+        created(){
+            this.getAll();
+            this.getTime();
+            // this.getAllZW();
+        },
+        methods:{
+            handlerChange(){
+
+                var a;
+                for (let i = 0; i < this.tableData.length; i++){
+                    if (this.tableData[i].itemName === "基本工资") {
+                        a=i
+                    };
+                }
+
+
+                for (let i = 0; i < this.tableData.length; i++){
+                    if (this.tableData[i].itemName === "养老保险") this.tableData[i].money = 0.08 * this.tableData[a].money;
+                    if (this.tableData[i].itemName === "医疗保险") this.tableData[i].money = 0.02 * this.tableData[a].money+3;
+                    if (this.tableData[i].itemName === "失业保险") this.tableData[i].money = 0.005 * this.tableData[a].money;
+                    if (this.tableData[i].itemName === "住房公积金") this.tableData[i].money = 0.08 * this.tableData[a].money;
+                }
+
+                this.form.total=0;
+                for (let i = 0; i < this.tableData.length; i++){
+                    this.form.total += Number(this.tableData[i].money);
+                }
+                // alert(this.form.total);
+                // console.log(this.tableData[a].itemName);
+                // console.log(a)
+            },
+            getAll(){
+                axios.get("../salaryStandards/some/0").then((res)=>{
+                    this.dataList = res.data.data;
+                    // alert(this.dataList)
+                });
+            },
+            getTime(){
+                var date = new Date();
+                this.form.registrationTime = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "  " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            },
+            handleUpdate(row){
+                // alert(row.id);
+                axios.get("../salaryStandards/"+row.id).then((res)=>{
+                    if (res.data.code === 20041){
+                        this.form.standardId = res.data.data.standardId;
+                        this.form.standardName = res.data.data.standardName;
+                        this.form.total = res.data.data.total;
+                        this.form.maker = res.data.data.maker;
+                        this.form.registrant = res.data.data.registrant;
+                        this.dialogFormVisible = true;
+                        this.standardId = res.data.data.standardId;
+                    }else {}
+                }).finally(()=>{
+                    this.getAll()
+                });
+
+                axios.get("../salaryItems/"+row.standardId).then((res)=>{
+                    this.tableData = res.data.data;
+                })
+
+            },
+
+            onSubmit(){
+                this.formData.ill = this.tableData;
+                this.form.state = 1;
+                axios.put("../salaryStandards",this.form).then((res)=>{
+
+                });
+                axios.put("../salaryItems",this.formData.ill).then((res)=>{
+                    if(res.data.code == 20031){
+                        this.$message.success("复核成功");
+                    }else if (res.data.code == 20030){
+                        this.$message.success("复核失败");
+                    }else{}
+                    this.getAll();
+                });
+                this.dialogFormVisible=false;
+            }
+
+        },
+    })
+
+</script>
+
+<!--<style>-->
+<!--    .handle-title{-->
+<!--        line-height: 50px;-->
+<!--    }-->
+<!--    .el-textarea__inner{-->
+<!--        height: 100px;-->
+<!--    }-->
+<!--</style>-->
+
+</html>

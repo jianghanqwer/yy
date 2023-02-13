@@ -6,6 +6,8 @@ import com.qyj.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PositionServiceImpl implements PositionService {
 
@@ -13,12 +15,12 @@ public class PositionServiceImpl implements PositionService {
     private PositionDao positionDao;
 
     @Override
-    public Position getClassification() {
+    public List<Position> getClassification() {
         return positionDao.getClassification();
     }
 
     @Override
-    public Position getName(Integer id) {
+    public List<Position> getName(Integer id) {
         return positionDao.getName(id);
     }
 }

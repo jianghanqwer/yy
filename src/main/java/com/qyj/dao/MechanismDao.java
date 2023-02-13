@@ -3,6 +3,7 @@ package com.qyj.dao;
 import com.qyj.domain.Book;
 import com.qyj.domain.Mechanism;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
 
@@ -32,4 +33,21 @@ public interface MechanismDao {
 //    @Select("select id,name as levelThird from level_third where second_no in (select id from level_second where name = #{levelSecond} and first_no in (select id from level_first where name = #{levelFirst} ))")
     @Select("select id,name as levelThird from level_third where second_no in (select id from level_second where id = #{levelSecond} and first_no = #{levelFirst})")
     public List<Mechanism> getLevelThird(@Param("levelFirst") String levelFirst,@Param("levelSecond") String levelSecond);
+
+    @Insert("insert into level_first (name) values (#{levelFirst});")
+    public void saveLevelFirst(Mechanism mechanism);
+
+    @Insert("insert into level_second (name,first_no) values (#{levelSecond},#{id});")
+    @Results(id = "",value = {
+//            @Result(column = "name",property = "name",jdbcType = JdbcType.VARCHAR),
+            @Result(column = "first_no",property = "id",jdbcType = JdbcType.INTEGER)
+    })
+    public void saveLevelSecond(Mechanism mechanism);
+
+    @Insert("insert into level_third (name,second_no) values (#{levelThird},#{id});")
+    @Results(id = "",value = {
+//            @Result(column = "name",property = "name",jdbcType = JdbcType.VARCHAR),
+            @Result(column = "second_no",property = "id",jdbcType = JdbcType.INTEGER)
+    })
+    public void saveLevelThird(Mechanism mechanism);
 }
